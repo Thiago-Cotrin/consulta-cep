@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Consulta de CEP - Encontre endereços de forma rápida e confiável">
+  <title>Consulta CEP | Qualidade de Software</title>
+  <link rel="stylesheet" href="src/css/styles.css">
+  <link rel="stylesheet" href="src/css/accessibility.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+  <a href="#main-content" class="skip-link">Pular para o conteúdo principal</a>
+
+  <header class="header" role="banner">
+    <div class="container">
+      <h1 class="header__title">
+        <span class="header__icon" aria-hidden="true">📍</span>
+        Consulta CEP
+      </h1>
+      <p class="header__subtitle">Encontre endereços de forma rápida e confiável</p>
+    </div>
+  </header>
+
+  <main id="main-content" class="main" role="main">
+    <div class="container">
+
+      <!-- Seção de Busca -->
+      <section class="search-section" aria-labelledby="search-heading">
+        <h2 id="search-heading" class="sr-only">Buscar CEP</h2>
+
+        <form id="cep-form" class="search-form" novalidate>
+          <div class="form-group">
+            <label for="cep-input" class="form-label">
+              Informe o CEP
+              <span class="form-label__hint">(somente números, 8 dígitos)</span>
+            </label>
+            <div class="input-wrapper">
+              <input
+                type="text"
+                id="cep-input"
+                name="cep"
+                class="form-input"
+                placeholder="Ex: 01001000"
+                maxlength="9"
+                inputmode="numeric"
+                autocomplete="postal-code"
+                aria-describedby="cep-help cep-error"
+                aria-invalid="false"
+                required
+              >
+              <button type="submit" id="search-btn" class="btn btn--primary" aria-label="Buscar endereço pelo CEP">
+                <span class="btn__text">Buscar</span>
+                <span class="btn__loader" aria-hidden="true" hidden>
+                  <span class="spinner"></span>
+                </span>
+              </button>
+            </div>
+            <small id="cep-help" class="form-help">
+              Digite 8 números. Exemplo: 01001-000 (Praça da Sé, São Paulo)
+            </small>
+            <div id="cep-error" class="form-error" role="alert" aria-live="assertive" hidden></div>
+          </div>
+        </form>
+      </section>
+
+      <!-- Seção de Resultado -->
+      <section id="result-section" class="result-section" aria-labelledby="result-heading" hidden>
+        <h2 id="result-heading" class="result-section__title">📋 Resultado da Consulta</h2>
+
+        <div class="result-card" role="region" aria-label="Dados do endereço">
+          <div class="result-grid">
+            <div class="result-item">
+              <span class="result-item__label">CEP</span>
+              <span class="result-item__value" id="result-cep">—</span>
+            </div>
+            <div class="result-item">
+              <span class="result-item__label">Logradouro</span>
+              <span class="result-item__value" id="result-logradouro">—</span>
+            </div>
+            <div class="result-item">
+              <span class="result-item__label">Bairro</span>
+              <span class="result-item__value" id="result-bairro">—</span>
+            </div>
+            <div class="result-item">
+              <span class="result-item__label">Cidade</span>
+              <span class="result-item__value" id="result-cidade">—</span>
+            </div>
+            <div class="result-item">
+              <span class="result-item__label">Estado (UF)</span>
+              <span class="result-item__value" id="result-uf">—</span>
+            </div>
+            <div class="result-item">
+              <span class="result-item__label">DDD</span>
+              <span class="result-item__value" id="result-ddd">—</span>
+            </div>
+          </div>
+
+          <div class="result-actions">
+            <button id="copy-btn" class="btn btn--secondary" aria-label="Copiar endereço para a área de transferência">
+              📋 Copiar Endereço
+            </button>
+            <button id="clear-btn" class="btn btn--outline" aria-label="Limpar resultado e buscar novo CEP">
+              🔄 Nova Consulta
+            </button>
+          </div>
+        </div>
+      </section>
+
+      <!-- Histórico -->
+      <section id="history-section" class="history-section" aria-labelledby="history-heading" hidden>
+        <h2 id="history-heading" class="history-section__title">🕐 Histórico de Consultas</h2>
+        <ul id="history-list" class="history-list" role="list"></ul>
+        <button id="clear-history-btn" class="btn btn--outline btn--small">Limpar Histórico</button>
+      </section>
+
+    </div>
+  </main>
+
+  <footer class="footer" role="contentinfo">
+    <div class="container">
+      <p>Atividade Avaliativa — Qualidade de Software na Prática com CI/CD</p>
+      <p>API utilizada: <a href="https://viacep.com.br/" target="_blank" rel="noopener noreferrer">ViaCEP</a></p>
+    </div>
+  </footer>
+
+  <!-- Scripts modulares -->
+  <script src="src/js/validators.js"></script>
+  <script src="src/js/api.js"></script>
+  <script src="src/js/ui.js"></script>
+  <script src="src/js/history.js"></script>
+  <script src="src/js/app.js"></script>
+</body>
+</html>

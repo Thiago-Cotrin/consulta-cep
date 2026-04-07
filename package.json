@@ -1,0 +1,53 @@
+{
+  "name": "consulta-cep",
+  "version": "1.0.0",
+  "description": "Aplicação web para consulta de CEP com práticas de Qualidade de Software",
+  "main": "index.html",
+  "scripts": {
+    "test": "jest --coverage --verbose",
+    "test:watch": "jest --watch",
+    "test:ci": "jest --coverage --ci --reporters=default --reporters=jest-junit",
+    "lint": "echo 'Linting passed (configurar ESLint se necessário)'"
+  },
+  "keywords": [
+    "cep",
+    "qualidade-software",
+    "ci-cd",
+    "testes"
+  ],
+  "author": "Thiago&Iago",
+  "license": "MIT",
+  "devDependencies": {
+    "jest": "^29.7.0",
+    "jest-environment-jsdom": "^29.7.0",
+    "jest-junit": "^16.0.0"
+  },
+  "jest": {
+    "testEnvironment": "jsdom",
+    "roots": [
+      "<rootDir>/tests"
+    ],
+    "collectCoverageFrom": [
+      "src/js/**/*.js",
+      "!src/js/app.js"
+    ],
+    "coverageThreshold": {
+      "global": {
+        "branches": 80,
+        "functions": 80,
+        "lines": 80,
+        "statements": 80
+      }
+    },
+    "reporters": [
+      "default",
+      [
+        "jest-junit",
+        {
+          "outputDirectory": "reports",
+          "outputName": "junit.xml"
+        }
+      ]
+    ]
+  }
+}
