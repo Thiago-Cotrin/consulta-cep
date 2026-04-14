@@ -1,6 +1,6 @@
 # 📍 Consulta CEP — Qualidade de Software na Prática com CI/CD
 
-![CI/CD Pipeline](https://github.com/SEU_USUARIO/consulta-cep/actions/workflows/ci.yml/badge.svg)
+![CI/CD Pipeline](https://github.com/Thiago-Cotrin/consulta-cep/actions/workflows/ci.yml/badge.svg)
 ![GitHub Pages](https://img.shields.io/badge/deploy-GitHub%20Pages-blue)
 ![License](https://img.shields.io/badge/license-MIT-green)
 
