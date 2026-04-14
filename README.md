@@ -127,7 +127,7 @@ npm run test:watch
 
 ## ⚙️ Pipeline de CI/CD
 
-### GitHub Actions (`.github/workflows/master.yml`)
+### GitHub Actions (`.github/workflows/main.yml`)
 
 A pipeline executa automaticamente em:
 
@@ -178,7 +178,7 @@ O repositório deve ser configurado com:
 
 ```bash
 # 1. Clone o repositório
-git clone https://github.com/SEU_USUARIO/consulta-cep.git
+git clone https://github.com/Thiago-Cotrin/consulta-cep.git
 cd consulta-cep
 
 # 2. Instale as dependências (apenas para testes)
@@ -202,7 +202,7 @@ npx serve .
 
 A aplicação é publicada automaticamente no **GitHub Pages** via pipeline CI/CD.
 
-**URL**: `https://SEU_USUARIO.github.io/consulta-cep/`
+**URL**: `https://Thiago-Cotrin.github.io/consulta-cep/`
 
 ### Configurar GitHub Pages:
 
