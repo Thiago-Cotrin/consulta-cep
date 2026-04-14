@@ -127,7 +127,7 @@ npm run test:watch
 
 ## ⚙️ Pipeline de CI/CD
 
-### GitHub Actions (`.github/workflows/ci.yml`)
+### GitHub Actions (`.github/workflows/main.yml`)
 
 A pipeline executa automaticamente em:
 
