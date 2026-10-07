@@ -1,245 +1,78 @@
-# 📍 Consulta CEP — Qualidade de Software na Prática com CI/CD
+# Consulta CEP
 
-![CI/CD Pipeline](https://github.com/Thiago-Cotrin/consulta-cep/actions/workflows/ci.yml/badge.svg)
-![GitHub Pages](https://img.shields.io/badge/deploy-GitHub%20Pages-blue)
-![License](https://img.shields.io/badge/license-MIT-green)
+[![CI](https://github.com/Thiago-Cotrin/consulta-cep/actions/workflows/ci.yml/badge.svg)](https://github.com/Thiago-Cotrin/consulta-cep/actions/workflows/ci.yml)
+![Cobertura de linhas](https://img.shields.io/badge/cobertura%20de%20linhas-100%25-brightgreen)
+![Licença MIT](https://img.shields.io/badge/licen%C3%A7a-MIT-blue)
 
-## 📋 Descrição
+Aplicação web que recebe um CEP e devolve o endereço completo (logradouro, bairro, cidade, UF e DDD) pela API pública [ViaCEP](https://viacep.com.br/).
+É feita em HTML, CSS e JavaScript puro, sem dependências em produção. Foi criada na disciplina de Qualidade de Software (Sistemas de Informação, UEMG): o foco está em validação, tratamento de erros, testes automatizados e integração contínua.
 
-Aplicação web para **consulta de CEP** que retorna automaticamente o endereço completo (logradouro, bairro, cidade, estado e DDD) a partir de um CEP informado pelo usuário. A aplicação consome a API pública [ViaCEP](https://viacep.com.br/) e foi desenvolvida com foco em **Qualidade de Software**.
+**Demonstração:** https://thiago-cotrin.github.io/consulta-cep/
 
-### 🎯 Funcionalidades
+## Funcionalidades
 
-- ✅ Validação completa do CEP (formato, faixa, dígitos repetidos)
-- ✅ Máscara automática de input (XXXXX-XXX)
-- ✅ Consulta à API ViaCEP com tratamento de erros
-- ✅ Exibição de resultados formatados
-- ✅ Histórico de consultas com persistência (localStorage)
-- ✅ Copiar endereço para área de transferência
-- ✅ Design responsivo (mobile-first)
-- ✅ Acessibilidade (WCAG 2.1 - ARIA, skip-link, teclado)
-- ✅ Modo escuro automático (prefers-color-scheme)
-- ✅ Redução de movimento (prefers-reduced-motion)
+- Validação do CEP antes da consulta: formato, 8 dígitos, dígitos todos iguais e faixa válida
+- Máscara automática no campo (`00000-000`)
+- Consulta ao ViaCEP com tempo limite de 8 s (`AbortController`) e mensagens próprias para CEP inexistente, erro HTTP, tempo esgotado e falta de rede
+- Histórico das últimas 10 consultas no `localStorage`, sem duplicados e protegido contra JSON corrompido
+- Botão para copiar o endereço
+- Layout responsivo
+- Acessibilidade: link "pular para o conteúdo", atributos ARIA, navegação por teclado e suporte a `prefers-reduced-motion`, `prefers-contrast` e `prefers-color-scheme` (modo escuro)
 
----
-
-## 🏗️ Justificativa da Abordagem
-
-### Frontend Estático (Opção 1)
-
-Optamos pela **abordagem de frontend estático** pelos seguintes motivos:
-
-1. **Simplicidade e foco**: A aplicação se concentra em validação, consumo de API e UX — pilares da qualidade de software.
-2. **Compatibilidade com GitHub Pages**: Deploy direto sem necessidade de backend.
-3. **API pública (ViaCEP)**: Não requer autenticação ou backend intermediário.
-4. **Testabilidade**: Módulos JavaScript puros são altamente testáveis com Jest.
-5. **Zero dependências em produção**: Apenas HTML, CSS e JavaScript vanilla.
-
----
-
-## 🏛️ Arquitetura e Decisões Técnicas
-
-### Separação de Responsabilidades (SRP)
+## Estrutura
 
 ```
-consulta-cep/
-├── index.html                    # Estrutura HTML semântica
-├── src/
-│   ├── css/
-│   │   ├── styles.css           # Estilos visuais (metodologia BEM)
-│   │   └── accessibility.css    # Acessibilidade (WCAG 2.1)
-│   └── js/
-│       ├── validators.js        # Validação de CEP (regras de negócio)
-│       ├── api.js               # Comunicação com ViaCEP
-│       ├── ui.js                # Manipulação do DOM
-│       ├── history.js           # Persistência com localStorage
-│       └── app.js               # Orquestrador principal
-├── tests/
-│   ├── validators.test.js       # Testes de validação (~25 casos)
-│   ├── api.test.js              # Testes da API (~10 casos)
-│   └── history.test.js          # Testes de histórico (~10 casos)
-├── .github/
-│   └── workflows/
-│       └── ci.yml               # Pipeline CI/CD (GitHub Actions)
-├── package.json                 # Configuração do projeto e Jest
-└── README.md                    # Este arquivo
+index.html                 HTML semântico; carrega os módulos na ordem abaixo
+src/js/validators.js       regras de validação e máscara do CEP
+src/js/api.js              chamada ao ViaCEP, tempo limite e tratamento de erros
+src/js/ui.js               atualização do DOM
+src/js/history.js          histórico no localStorage
+src/js/app.js              liga os módulos e os eventos da página
+src/css/styles.css         estilos (nomes de classes no padrão BEM)
+src/css/accessibility.css  skip link, foco visível e preferências do sistema
+tests/                     testes Jest dos módulos de validação, API e histórico
 ```
 
-### Padrões Aplicados
+Cada módulo é uma IIFE com uma responsabilidade só e expõe uma API pequena. Os módulos também exportam via `module.exports`, para que o Jest possa testá-los sem navegador.
 
-| Padrão                      | Onde foi aplicado                        |
-| --------------------------- | ---------------------------------------- |
-| **Module Pattern (IIFE)**   | Todos os módulos JS — encapsulamento     |
-| **BEM (CSS)**               | Nomenclatura de classes CSS              |
-| **SRP**                     | Cada módulo com responsabilidade única   |
-| **Defensive Programming**   | Validação de inputs, tratamento de erros |
-| **Progressive Enhancement** | Funciona sem JS (conteúdo acessível)     |
-| **Mobile-First**            | CSS responsivo com media queries         |
+## Testes
 
----
+Jest com ambiente `jsdom`: **59 testes** em 3 suítes.
 
-## 🧪 Testes Unitários
+| Suíte | O que cobre |
+|---|---|
+| `validators.test.js` (40) | limpeza, formatação, comprimento, dígitos repetidos, faixa, validação completa e máscara |
+| `api.test.js` (9) | resposta completa, campos ausentes, CEP inexistente, erros HTTP, tempo esgotado e falha de rede (`fetch` simulado) |
+| `history.test.js` (10) | gravação e leitura, duplicados, limite de itens e JSON inválido |
 
-### Framework: Jest + jsdom
-
-Os testes cobrem 3 módulos com **~45 casos de teste**:
-
-#### `validators.test.js`
-
-- `sanitize()` — Remoção de caracteres (6 testes)
-- `format()` — Formatação de CEP (4 testes)
-- `hasValidLength()` — Validação de comprimento (5 testes)
-- `isNotAllSameDigits()` — Dígitos repetidos (5 testes)
-- `isInValidRange()` — Faixa válida (5 testes)
-- `validate()` — Validação completa (9 testes)
-- `applyMask()` — Máscara de input (6 testes)
-
-#### `api.test.js`
-
-- Resposta de sucesso com dados completos
-- Campos ausentes com valores padrão
-- CEP não encontrado (`{ erro: true }`)
-- Erros HTTP (500, 404, etc.)
-- Timeout (AbortError)
-- Erro de rede (offline)
-
-#### `history.test.js`
-
-- CRUD no localStorage
-- Controle de duplicatas
-- Limite de itens
-- Tratamento de JSON inválido
-
-### Executar Testes
+Cobertura atual: 100% das linhas e 89,6% dos ramos dos módulos testados (`validators`, `api`, `history`). O `package.json` exige no mínimo 80% em cada métrica. `ui.js` e `app.js` mexem diretamente no DOM e ainda não têm testes.
 
 ```bash
-# Instalar dependências
-npm install
-
-# Executar testes com cobertura
-npm test
-
-# Modo watch (desenvolvimento)
-npm run test:watch
+npm ci            # instala as dependências de desenvolvimento
+npm test          # testes com relatório de cobertura
+npm run lint      # ESLint
 ```
 
----
+## Integração contínua
 
-## ⚙️ Pipeline de CI/CD
+Workflow `.github/workflows/ci.yml` (GitHub Actions):
 
-### GitHub Actions (`.github/workflows/main.yml`)
+1. **Lint e testes**, em cada push e pull request para `main`: `npm ci`, ESLint e Jest com cobertura. O relatório de cobertura fica guardado como artefato da execução.
+2. **Publicação**, só em push para `main` e só se o passo anterior passar: o site é publicado no GitHub Pages.
 
-A pipeline executa automaticamente em:
-
-- **Push na main** → Testes + Deploy
-- **Pull Requests para main** → Testes + Comentário de cobertura
-
-#### Jobs:
-
-| Job            | Descrição                                              | Trigger      |
-| -------------- | ------------------------------------------------------ | ------------ |
-| 🧪 **test**    | Executa testes unitários e gera relatório de cobertura | Push + PR    |
-| 🔍 **quality** | Valida estrutura do projeto e HTML semântico           | Push + PR    |
-| 🚀 **deploy**  | Publica no GitHub Pages (apenas se testes passarem)    | Push na main |
-
-#### Funcionalidades da Pipeline:
-
-- ✅ Execução de testes com cobertura mínima de 80%
-- ✅ Upload de relatórios como artefatos
-- ✅ Comentário automático de cobertura em Pull Requests
-- ✅ Validação de estrutura e qualidade do HTML
-- ✅ Deploy condicional (só após sucesso dos testes)
-- ✅ Concorrência controlada (sem deploys simultâneos)
-
----
-
-## 🔍 Revisão Automatizada de Código
-
-### Configuração do GitHub App
-
-Recomendamos a instalação do **Gemini Code Assist** ou **Qodo** no repositório:
-
-1. Acesse o GitHub Marketplace
-2. Busque por "Gemini Code Assist" (ou "Qodo PR Agent")
-3. Instale no repositório
-4. Crie um Pull Request — a ferramenta analisará automaticamente
-
-### Branch Protection Rules
-
-O repositório deve ser configurado com:
-
-- ✅ Require pull request before merging
-- ✅ Require status checks to pass (CI pipeline)
-- ✅ Require review from code owners (opcional)
-
----
-
-## 🚀 Como Executar Localmente
+## Executar localmente
 
 ```bash
-# 1. Clone o repositório
 git clone https://github.com/Thiago-Cotrin/consulta-cep.git
 cd consulta-cep
-
-# 2. Instale as dependências (apenas para testes)
-npm install
-
-# 3. Execute os testes
-npm test
-
-# 4. Abra a aplicação no navegador
-# Opção A: Abra o index.html diretamente
-open index.html
-
-# Opção B: Use um servidor local
-npx serve .
-# Acesse: http://localhost:3000
+npm ci && npm test
+npx serve .        # ou abrir o index.html no navegador
 ```
 
----
+## Autores
 
-## 🌐 Deploy
+Thiago Cotrin e Iago, trabalho em dupla da disciplina de Qualidade de Software (2026).
 
-A aplicação é publicada automaticamente no **GitHub Pages** via pipeline CI/CD.
+## Licença
 
-**URL**: `https://Thiago-Cotrin.github.io/consulta-cep/`
-
-### Configurar GitHub Pages:
-
-1. Vá em **Settings** → **Pages**
-2. Em **Source**, selecione **GitHub Actions**
-3. A pipeline fará o deploy automaticamente
-
----
-
-## 🔗 API Utilizada
-
-| API        | URL                                  | Autenticação | Limite                 |
-| ---------- | ------------------------------------ | ------------ | ---------------------- |
-| **ViaCEP** | https://viacep.com.br/ws/{cep}/json/ | Nenhuma      | Sem limite documentado |
-
-### Exemplo de Resposta:
-
-```json
-{
-  "cep": "01001-000",
-  "logradouro": "Praça da Sé",
-  "complemento": "lado ímpar",
-  "bairro": "Sé",
-  "localidade": "São Paulo",
-  "uf": "SP",
-  "ddd": "11"
-}
-```
-
----
-
-## 👥 Equipe
-
-- **Thiago & Iago** — Desenvolvimento e Testes
-
----
-
-## 📄 Licença
-
-Este projeto é licenciado sob a licença MIT. Veja o arquivo [LICENSE](LICENSE) para detalhes.
+[MIT](LICENSE)
